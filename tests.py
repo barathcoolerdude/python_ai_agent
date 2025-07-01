@@ -1,6 +1,6 @@
 import os
 import unittest
-from calculator.functions.get_files_info import *
+from functions.get_files_info import *
 
 class TestGetFilesInfo(unittest.TestCase):
     def test_get_files_info(self):
