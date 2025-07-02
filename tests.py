@@ -27,21 +27,21 @@ class TestGetFilesInfo(unittest.TestCase):
 
     def test_get_file_content_2(self):
         result = get_file_content("calculator", "main.py")
-        # print(f"result4: {result}")
+        print(f"result4: {result}")
         with open("calculator/main.py", 'r') as file:
             content = file.read()
         self.assertEqual(result, content)
 
     def test_get_file_content_3(self):
         result = get_file_content("calculator", "pkg/calculator.py")
-        # print(f"result5: {result}")
+        print(f"result5: {result}")
         with open("calculator/pkg/calculator.py", 'r') as file:
             content = file.read()
         self.assertEqual(result, content)
 
     def test_get_file_content_4(self):
         result = get_file_content("calculator", "/bin/cat")
-        # print(f"result6: {result}")
+        print(f"result6: {result}")
         self.assertEqual(result, 'Error: Cannot list "/bin/cat" as it is outside the permitted working directory')
             
 

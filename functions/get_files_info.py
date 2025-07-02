@@ -63,9 +63,18 @@ def get_file_content(working_directory, file_path):
         return f'Error: An unexpected error occurred while accessing file "{file_path}": {str(e)}'
     
     #check if target directory is within working directory
+    try:
+        if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
+            return f'Error: Cannot list "{file_path}" as it is outside the permitted working directory'
+        
+    except Exception as e:
+        return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
     
-    if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
-        return f'Error: Cannot list "{file_path}" as it is outside the permitted working directory'
+    except ValueError:
+        return f'Error: Invalid file path "{file_path}"'
+    
+    except Exception as e:
+        return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
     
     with open(target_abs_path, 'r') as file:
         content = file.read(10000)
