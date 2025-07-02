@@ -40,3 +40,38 @@ def get_files_info(working_directory, directory=None):
     string=  "".join(file_size_list)
     print(f"\nstring: {string}")
     return string 
+
+
+def get_file_content(working_directory, file_path):
+     
+     #check if directory is outside working directory
+    working_abs_path = os.path.abspath(working_directory)
+    target_abs_path = os.path.abspath(os.path.join(working_directory, file_path))
+
+    #check is directory
+    try:
+        if not os.path.isfile(target_abs_path):
+            f'Error: File not found or is not a regular file: "{file_path}"'
+
+    except FileNotFoundError:
+        return f'Error: File "{file_path}" does not exist in directory "{working_directory}"'
+    
+    except PermissionError:
+        return f'Error: Permission denied for file "{file_path}" in directory "{working_directory}"'
+    
+    except Exception as e:
+        return f'Error: An unexpected error occurred while accessing file "{file_path}": {str(e)}'
+    
+    #check if target directory is within working directory
+    
+    if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
+        return f'Error: Cannot list "{file_path}" as it is outside the permitted working directory'
+    
+    with open(target_abs_path, 'r') as file:
+        content = file.read(10000)
+        rest = file.read(1)
+
+        if rest:
+            content += f'[...File "{file_path}" truncated at 10000 characters]'
+
+    return content
