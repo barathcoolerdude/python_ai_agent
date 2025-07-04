@@ -84,3 +84,43 @@ def get_file_content(working_directory, file_path):
             content += f'[...File "{file_path}" truncated at 10000 characters]'
 
     return content
+
+def write_file(working_directory, file_path, content):
+
+     #check if directory is outside working directory
+    working_abs_path = os.path.abspath(working_directory)
+    target_abs_path = os.path.abspath(os.path.join(working_directory, file_path))
+
+    #check is directory
+    try:
+        if os.path.dirname(target_abs_path):
+            os.makedirs(os.path.dirname(target_abs_path), exist_ok=True)
+
+        if not os.path.isfile(target_abs_path):
+            with open(target_abs_path, "w") as file:
+                pass
+
+    except FileNotFoundError:
+        return f'Error: File "{file_path}" does not exist in directory "{working_directory}"'
+    
+    except PermissionError:
+        return f'Error: Permission denied for file "{file_path}" in directory "{working_directory}"'
+    
+    except Exception as e:
+        return f'Error: An unexpected error occurred while accessing file "{file_path}": {str(e)}'
+    
+    #check if target directory is within working directory
+    try:
+        if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
+            return f'Error: Cannot list "{file_path}" as it is outside the permitted working directory'
+        
+    except Exception as e:
+        return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
+    
+    except ValueError:
+        return f'Error: Invalid file path "{file_path}"'
+    
+    except Exception as e:
+        return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
+    
+    return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
