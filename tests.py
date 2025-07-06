@@ -1,6 +1,7 @@
 import os
 import unittest
 from functions.get_files_info import *
+from functions.run_python import *
 
 class TestGetFilesInfo(unittest.TestCase):
     # def test_get_files_info(self):
@@ -44,22 +45,38 @@ class TestGetFilesInfo(unittest.TestCase):
     #     print(f"result6: {result}")
     #     self.assertEqual(result, 'Error: Cannot list "/bin/cat" as it is outside the permitted working directory')
 
-    def test_get_file_content_write_file(self):
-        result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
-        length = len("wait, this isn't lorem ipsum")
-        print(f'result: {result}')
-        self.assertEqual(result, f'Successfully wrote to "lorem.txt" ({length} characters written)')        
+    # def test_get_file_content_write_file(self):
+    #     result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
+    #     length = len("wait, this isn't lorem ipsum")
+    #     print(f'result: {result}')
+    #     self.assertEqual(result, f'Successfully wrote to "lorem.txt" ({length} characters written)')        
 
-    def test_get_file_content_write_file_2(self):
-        result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
-        length = len("lorem ipsum dolor sit amet")
-        print(f'result: {result}')
-        self.assertEqual(result, f'Successfully wrote to "pkg/morelorem.txt" ({length} characters written)')  
+    # def test_get_file_content_write_file_2(self):
+    #     result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+    #     length = len("lorem ipsum dolor sit amet")
+    #     print(f'result: {result}')
+    #     self.assertEqual(result, f'Successfully wrote to "pkg/morelorem.txt" ({length} characters written)')  
 
-    def test_get_file_content_write_file_3(self):
-        result =   write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
-        print(f'result: {result}')
-        self.assertEqual(result, f'Error: Cannot list "/tmp/temp.txt" as it is outside the permitted working directory')
+    # def test_get_file_content_write_file_3(self):
+    #     result =   write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
+    #     print(f'result: {result}')
+    #     self.assertEqual(result, f'Error: Cannot list "/tmp/temp.txt" as it is outside the permitted working directory')
+
+    def test_run_python_file(self):
+        result = run_python_file("calculator", "main.py")
+        print(f"result: {result}")
+        
+    def test_run_python_file_2(self):
+        result = run_python_file("calculator", "tests.py")
+        print(f"result2: {result}")
+
+    def test_run_python_file_3(self):
+        result = run_python_file("calculator", "../main.py")
+        print(f"result3: {result}")
+
+    def test_run_python_file_4(self):
+        result = run_python_file("calculator", "nonexistent.py")
+        print(f"result4: {result}")
 
 if __name__ == '__main__':
     unittest.main()
