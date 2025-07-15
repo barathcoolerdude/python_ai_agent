@@ -2,6 +2,7 @@ import os
 import unittest
 from functions.get_files_info import *
 from functions.run_python import *
+from main import *
 
 class TestGetFilesInfo(unittest.TestCase):
     # def test_get_files_info(self):
@@ -77,6 +78,8 @@ class TestGetFilesInfo(unittest.TestCase):
     def test_run_python_file_4(self):
         result = run_python_file("calculator", "nonexistent.py")
         print(f"result4: {result}")
+
+    
 
 if __name__ == '__main__':
     unittest.main()

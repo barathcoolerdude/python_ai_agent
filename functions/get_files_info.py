@@ -1,50 +1,29 @@
 import os
 from google.genai import types
 
-def get_files_info(working_directory, directory=None):
-
-    print(f"\ndirectory: {directory}| working_directory: {working_directory}")
-
-    #check if directory is outside working directory
-    working_abs_path = os.path.abspath(working_directory)
-    target_abs_path = os.path.abspath(os.path.join(working_directory, directory))
-
-    #check is directory
-    if not os.path.isdir(target_abs_path):
-        return f'Error: "{target_abs_path}" is not a directory'
-    
-    #check if target directory is within working directory
-    if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
+def get_files_info(working_directory, directory="."):
+    abs_working_dir = os.path.abspath(working_directory)
+    target_dir = os.path.abspath(os.path.join(working_directory, directory))
+    if not target_dir.startswith(abs_working_dir):
         return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
+    if not os.path.isdir(target_dir):
+        return f'Error: "{directory}" is not a directory'
+    try:
+        files_info = []
+        for filename in os.listdir(target_dir):
+            filepath = os.path.join(target_dir, filename)
+            file_size = 0
+            is_dir = os.path.isdir(filepath)
+            file_size = os.path.getsize(filepath)
+            files_info.append(
+                f"- {filename}: file_size={file_size} bytes, is_dir={is_dir}"
+            )
+        return "\n".join(files_info)
+    except Exception as e:
+        return f"Error listing files: {e}"
 
-    #build and return contents of directory
-    contents = os.listdir(target_abs_path)
-
-    file_size_list = []
-    for content in contents:
-            try:
-                full_path = os.path.join(target_abs_path, content)
-                size = os.path.getsize(full_path)
-                is_dir = os.path.isdir(full_path)
             
-            except FileNotFoundError:
-                return f'Error: File "{content}" does not exist in directory "{target_abs_path}"'
-            
-            except PermissionError:
-                return f'Error: Permission denied for file "{content}" in directory "{target_abs_path}"'
-            
-            except Exception as e:
-                return f'Error: An unexpected error occurred while accessing file "{content}": {str(e)}'
-
-            file_size_list.append(f"\n- {content}: file_size={size} bytes, is_dir={is_dir}")
-        
-    string=  "".join(file_size_list)
-    print(f"\nstring: {string}")
-    return string 
-
-
 def get_file_content(working_directory, file_path):
-     
      #check if directory is outside working directory
     working_abs_path = os.path.abspath(working_directory)
     target_abs_path = os.path.abspath(os.path.join(working_directory, file_path))
@@ -53,12 +32,6 @@ def get_file_content(working_directory, file_path):
     try:
         if not os.path.isfile(target_abs_path):
             return f'Error: File not found or is not a regular file: "{file_path}"'
-
-    except FileNotFoundError:
-        return f'Error: File "{file_path}" does not exist in directory "{working_directory}"'
-    
-    except PermissionError:
-        return f'Error: Permission denied for file "{file_path}" in directory "{working_directory}"'
     
     except Exception as e:
         return f'Error: An unexpected error occurred while accessing file "{file_path}": {str(e)}'
@@ -67,23 +40,19 @@ def get_file_content(working_directory, file_path):
     try:
         if os.path.commonpath([working_abs_path, target_abs_path]) != working_abs_path:
             return f'Error: Cannot list "{file_path}" as it is outside the permitted working directory'
-        
-    except Exception as e:
-        return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
-    
-    except ValueError:
-        return f'Error: Invalid file path "{file_path}"'
     
     except Exception as e:
         return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
     
     with open(target_abs_path, 'r') as file:
-        content = file.read(10000)
+        content = file.read(100)
         rest = file.read(1)
 
         if rest:
             content += f'[...File "{file_path}" truncated at 10000 characters]'
-
+        print(f"\ncontent: {content}")
+    if not "wait, this isn't lorem ipsum" in content:
+        print(f"\n\n\n content: {content} \n\n\n")
     return content
 
 def write_file(working_directory, file_path, content):
@@ -100,17 +69,10 @@ def write_file(working_directory, file_path, content):
         if not os.path.isfile(target_abs_path):
             with open(target_abs_path, "w") as file:
                 file.write(content)
-
-    except FileNotFoundError:
-        return f'Error: File "{file_path}" does not exist in directory "{working_directory}"'
-    
-    except PermissionError:
-        return f'Error: Permission denied for file "{file_path}" in directory "{working_directory}"'
     
     except Exception as e:
         return f'Error: An unexpected error occurred while accessing file "{file_path}": {str(e)}'
     
-
 
 schema_get_files_info = types.FunctionDeclaration(
     name="get_files_info",
