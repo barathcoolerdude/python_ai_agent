@@ -4,6 +4,12 @@ from functions.get_files_info import *
 from functions.run_python import *
 from main import *
 
+from dotenv import load_dotenv
+
+#imprt google genai client and types
+from google import genai
+from google.genai import types
+
 class TestGetFilesInfo(unittest.TestCase):
     # def test_get_files_info(self):
     #     result = get_files_info("calculator", ".")
@@ -78,6 +84,17 @@ class TestGetFilesInfo(unittest.TestCase):
     def test_run_python_file_4(self):
         result = run_python_file("calculator", "nonexistent.py")
         print(f"result4: {result}")
+
+    # Load environment variables from .env file
+    # load_dotenv()
+    # def test_generate_content_full_messages(self):
+    #     api_key = os.environ.get("GEMINI_API_KEY")
+    #     client = genai.Client(api_key=api_key)
+    #     messages = ["hi", "hello"]
+    #     for i in messages:
+    #         full_messages = generate_content(client, i, verbose = True)
+    #     print(f"test full_messages: {full_messages}")
+
 
     
 

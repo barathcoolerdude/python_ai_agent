@@ -45,14 +45,13 @@ def get_file_content(working_directory, file_path):
         return f'Error: An unexpected error occurred while checking file path "{file_path}": {str(e)}'
     
     with open(target_abs_path, 'r') as file:
-        content = file.read(100)
+        content = file.read(10)
         rest = file.read(1)
 
         if rest:
             content += f'[...File "{file_path}" truncated at 10000 characters]'
         print(f"\ncontent: {content}")
-    if not "wait, this isn't lorem ipsum" in content:
-        print(f"\n\n\n content: {content} \n\n\n")
+    
     return content
 
 def write_file(working_directory, file_path, content):
@@ -98,7 +97,7 @@ schema_get_file_content = types.FunctionDeclaration(
                 type=types.Type.STRING,
                 description="relative path for the file to read",
             ),
-        },
+        },required=["file_path"],
     ),
 )
 
