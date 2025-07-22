@@ -52,7 +52,7 @@ def main():
     while True:
         iters += 1
         print(f"\n iteration {iters} of 5\n")
-        if iters > 5:
+        if iters > 20:
             print(f"Maximum iterations (5) reached.")
             sys.exit(1)
 
